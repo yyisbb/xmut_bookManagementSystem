@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public void initAdmin() {
         List<User> admin = userMapper.findAdmin();
         if (admin == null || admin.size() == 0) {
-            userMapper.register(new User(0, "admin", "admin", "admin", "", 1, "https://zwjimg.oss-cn-beijing.aliyuncs.com/6BF46770-4CA4-4A8D-B85C-B3A7C27F75C0_1_105_c.jpeg", 1, new Date(), 0));
+            userMapper.register(new User(0, "admin", "7251B052D39F11B21EA8C5CD30643FD6", "admin", "", 1, "https://zwjimg.oss-cn-beijing.aliyuncs.com/6BF46770-4CA4-4A8D-B85C-B3A7C27F75C0_1_105_c.jpeg", 1, new Date(), 0));
         }
     }
 
