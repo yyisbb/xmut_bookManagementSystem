@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="wang.gravity.bookmanagementsystem.mapper.UserMapper">
+    <select id="findAllUser" resultType="User">
+        select id, username, nickname, studentId, status, avatar,created_time
+        from t_users where isAdmin !=1;
+    </select>
+
+    <select id="findUserById" resultType="User">
+        select id, username, nickname, studentId, status, avatar
+        from t_users where id = #{id};
+    </select>
+
+    <select id="findAdmin" resultType="User">
+        select id, username, nickname, studentId, status, avatar
+        from t_users where isAdmin = 1;
+    </select>
+
+    <select id="login" parameterType="User" resultType="User">
+        select *
+        from t_users
+        where username = #{username}
+          and password = #{password}
+    </select>
+
+    <select id="getUserByUserName" resultType="User">
+        select *
+        from t_users
+        where username = #{username};
+    </select>
+
+    <insert id="register" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        insert into t_users(username, password, studentId, nickname,created_time,avatar)
+        values (#{username}, #{password}, #{studentId}, #{nickname},#{createdTime},#{avatar})
+    </insert>
+
+    <select id="getUserByUserNameOrStudentId" resultType="User">
+        select *
+        from t_users
+        where username = #{username}
+           or studentId = #{studentId};
+    </select>
+
+    <delete id="deleteUsers">
+        delete from t_users
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="resetPassword">
+        update t_users
+        set password = #{newPassword}
+        where id = #{id}
+    </update>
+
+    <update id="addBorrowNum">
+        update t_users
+        set borrowNum = #{borrowNum}
+        where id = #{id}
+    </update>
+
+    <update id="disableUser">
+        update t_users
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="wang.gravity.bookmanagementsystem.mapper.BookMapper">
+    <select id="getAllBook" resultType="Book">
+        select t_book.*,t_category.name as CategoryName
+        from t_book left join t_category on t_book.bookCategoryId = t_category.id
+        order by bookBorrowNum desc, created_time desc ;
+    </select>
+
+    <select id="getBookByCategoryId" resultType="Book">
+        select *
+        from t_book where bookCategoryId = #{categoryId}
+    </select>
+
+    <select id="getBookByBookNo" resultType="Book">
+        select *
+        from t_book where bookNo = #{bookNo}
+    </select>
+
+    <select id="getBookByBookId" resultType="Book">
+        select *
+        from t_book where id = #{bookId}
+    </select>
+
+    <delete id="deleteBooks">
+        delete from t_book
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <insert id="addBook" useGeneratedKeys="true" keyProperty="id" parameterType="Book">
+        insert into t_book(bookNo, bookName, bookAuthor, bookQuantity,bookCover,bookCategoryId,created_time,bookDescription,bookContent)
+        values (#{bookNo}, #{bookName}, #{bookAuthor}, #{bookQuantity},#{bookCover},#{bookCategoryId},#{createdTime},#{bookDescription},#{bookContent})
+    </insert>
+
+    <update id="borrowBook">
+        update t_book
+        set bookBorrowNum = #{bookBorrowNum} , bookQuantity = #{bookQuantity}
+        where bookNo = #{bookNo}
+    </update>
+
+    <update id="updateBookInfo">
+        update t_book
+        set
+             bookName = #{bookName},
+             bookAuthor = #{bookAuthor},
+             bookCover = #{bookCover},
+             bookQuantity = #{bookQuantity},
+             bookCategoryId = #{bookCategoryId},
+             bookContent = #{bookContent},
+            bookDescription = #{bookDescription}
+        where id = #{id}
+    </update>
+</mapper>

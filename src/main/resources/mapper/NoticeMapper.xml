@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="wang.gravity.bookmanagementsystem.mapper.NoticeMapper">
+
+    <insert id="sendNotice" useGeneratedKeys="true" keyProperty="id" parameterType="Notice">
+        insert into t_manager_system_notice(title, content, `type`, `state`, recipient_id,
+                                            manager_id, created_time)
+        values (#{title}, #{content}, #{type}, 0, #{recipientId}, #{managerId},
+                #{createdTime})
+    </insert>
+
+
+    <select id="getUnPullNoticeList" resultType="Notice">
+        SELECT *
+        FROM t_manager_system_notice
+        WHERE state!=1
+    </select>
+
+    <select id="getAllPullNoticeList" resultType="Notice">
+        SELECT msn.*,u.nickname as managerName
+        FROM t_manager_system_notice msn join t_users u on msn.manager_id = u.id
+    </select>
+
+    <insert id="userPullNoticeList" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user_system_notice(`state`, system_notice_id, recipient_id,created_time)
+        values
+
+        <foreach item="userNotice" collection="userNoticeList" separator=",">
+            (#{userNotice.state}, #{userNotice.systemNoticeId},
+            #{userNotice.recipientId},#{userNotice.createdTime})
+        </foreach>
+
+    </insert>
+
+    <insert id="userPullNotice" useGeneratedKeys="true" keyProperty="id" parameterType="UserNotice">
+        insert into t_user_system_notice(`state`, system_notice_id, recipient_id, created_time)
+        values (#{state}, #{systemNoticeId}, #{recipientId}, #{createdTime})
+    </insert>
+
+    <update id="completeNotice">
+        update t_manager_system_notice
+        set state = 1
+        where id = #{noticeId}
+    </update>
+
+    <select id="getNoticeByUserId" resultType="Notice">
+        SELECT usn.id,usn.created_time,usn.state,msn.title,msn.content  FROM t_user_system_notice usn JOIN t_manager_system_notice msn ON msn.id = usn.system_notice_id WHERE usn.recipient_id = #{userId}
+    </select>
+
+    <update id="readNotice">
+        update t_user_system_notice
+        set state = 1
+        where id = #{noticeId}
+    </update>
+
+    <update id="readAllNotice">
+        update t_user_system_notice
+        set state = 1
+        where recipient_id = #{recipientId}
+    </update>
+
+
+</mapper>

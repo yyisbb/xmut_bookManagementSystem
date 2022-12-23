@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="wang.gravity.bookmanagementsystem.mapper.InfoMapper">
+
+    <select id="getPlatformInfo" resultType="Info">
+        SELECT (SELECT count(bookNo)FROM t_book) as bookTotal,
+               (SELECT count(t_category.id)FROM t_category) as categoryTotal,
+               (SELECT count(t_users.id)FROM t_users WHERE `status` = 1) as userTotal,
+               (SELECT count(t_borrow.id)FROM t_borrow WHERE t_borrow.back_time is NULL) as returnedBookNum
+    </select>
+
+</mapper>

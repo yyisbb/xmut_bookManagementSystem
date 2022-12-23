@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="wang.gravity.bookmanagementsystem.mapper.BorrowMapper">
+    <insert id="borrowBook" useGeneratedKeys="true" keyProperty="id" parameterType="Borrow">
+        insert into t_borrow(bookNo, created_time, userId)
+        values (#{bookNo}, #{createdTime}, #{userId})
+    </insert>
+
+    <select id="getBorrowByBookNo" resultType="Borrow">
+        select *
+        from t_borrow
+        where bookNo = #{bookNo}
+          and userId = #{userId}
+          and back_time is null
+    </select>
+
+    <update id="backBook">
+        update t_borrow
+        set back_time = #{backTime}
+        where id = #{id}
+    </update>
+
+    <select id="getBorrowList" resultType="Borrow">
+        select bo.id,bo.bookNo,bo.created_time,bo.back_time,bo.userId,b.bookName
+        from t_borrow bo inner join t_book b on bo.bookNo = b.bookNo
+        <if test="userId != 0">
+            where bo.userId = #{userId}
+        </if>
+        order by bo.back_time is not null , bo.created_time desc;
+    </select>
+
+</mapper>
